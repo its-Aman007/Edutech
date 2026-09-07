@@ -11,7 +11,7 @@ const app = express();
 const upload = multer({ dest: 'uploads/' });
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://melodious-unicorn-d33223.netlify.app'
+  'https://workshopedu.netlify.app/'
 ];
 
 app.use(cors({
