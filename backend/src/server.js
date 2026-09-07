@@ -9,17 +9,17 @@ import swaggerUi from 'swagger-ui-express';
 
 const app = express();
 const upload = multer({ dest: 'uploads/' });
-const allowedOrigins = [
-  'http://localhost:5173',
-  'https://workshopedu.netlify.app/'
-];
+const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173,https://workshopedu.netlify.app')
+	.split(',')
+	.map(origin => origin.trim().replace(/\/$/, ''))
+	.filter(Boolean);
 
 app.use(cors({
-  origin: function (origin, callback) {
+	origin(origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+			callback(new Error(`CORS blocked origin: ${origin}`));
     }
   },
   credentials: true
