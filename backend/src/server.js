@@ -9,7 +9,21 @@ import swaggerUi from 'swagger-ui-express';
 
 const app = express();
 const upload = multer({ dest: 'uploads/' });
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://melodious-unicorn-d33223.netlify.app'
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 app.use(express.json());
 
 const userSchema = new mongoose.Schema({ name: String, email: { type: String, unique: true }, password: String, role: { type: String, enum: ['admin','manager','member'], default: 'member' }, avatar: String }, { timestamps: true });
